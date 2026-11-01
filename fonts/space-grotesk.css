@@ -1,0 +1,15 @@
+/*
+  Tipo de letra Space Grotesk servido desde nuestra propia web.
+
+  POR QUÉ: antes se cargaba desde Google Fonts, y eso hace que el navegador
+  de cada visitante envíe su IP a Google. En la UE eso cuenta como pasar
+  datos a un tercero sin permiso, y es justo lo que obliga a poner avisos.
+  Teniendo los archivos aquí, la web no llama a nadie de fuera.
+
+  Licencia: SIL Open Font License 1.1 (ver OFL.txt): se puede usar y
+  redistribuir gratis, también en webs.
+  font-display: swap -> mientras carga, se ve con la letra del sistema.
+*/
+@font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 400; font-display: swap; src: url('space-grotesk-400.woff') format('woff'); }
+@font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 500; font-display: swap; src: url('space-grotesk-500.woff') format('woff'); }
+@font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 700; font-display: swap; src: url('space-grotesk-700.woff') format('woff'); }

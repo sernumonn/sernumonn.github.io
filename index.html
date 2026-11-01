@@ -1,0 +1,205 @@
+<!doctype html>
+<!--
+  Portal de sernuu (https://sernuu.com): la portada con todas mis apps.
+  Cada tarjeta lleva a la web de su app (rumbo.sernuu.com...).
+
+  CÓMO AÑADIR UNA APP NUEVA:
+    1. Copia un bloque <article class="app">...</article> entero.
+    2. Cambia nombre, texto, icono, color (--c1 y --c2) y enlace.
+    3. Estado: <span class="status live">Disponible</span> si ya se puede
+       usar, o <span class="status soon">En desarrollo</span> si no
+       (en ese caso quita el botón "Abrir" o deja el de "Pronto").
+
+  Esta página es HTML y CSS puros: sin JavaScript, sin cookies y sin
+  cargar nada de otras webs (la letra está en fonts/). Por eso no hace
+  falta ningún aviso de cookies.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>sernuu · Apps hechas a mano</title>
+<meta name="description" content="Las apps de sernuu: Rumbo (planifica tus viajes día a día, gratis) y las que vienen.">
+<link rel="canonical" href="https://sernuu.com/">
+<!-- Vista previa al compartir el enlace -->
+<meta property="og:title" content="sernuu · Apps hechas a mano">
+<meta property="og:description" content="Rumbo y las apps que vienen.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sernuu.com/">
+<meta name="theme-color" content="#07070B">
+<!-- Icono de la pestaña: una "s" blanca sobre el degradado de la marca, en SVG -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23FF7A18'/%3E%3Cstop offset='1' stop-color='%23A855FF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='45' font-family='Arial,sans-serif' font-weight='700' font-size='40' text-anchor='middle' fill='white'%3Es%3C/text%3E%3C/svg%3E">
+<!-- La letra se sirve desde esta misma web (no desde Google) -->
+<link rel="stylesheet" href="fonts/space-grotesk.css">
+<style>
+  :root {
+    --bg: #07070B; --surface: #111118; --surface2: #1A1A24; --border: #262633;
+    --text: #F4F4F8; --dim: #A0A0B4; --mute: #62627A;
+    --orange: #FF7A18; --pink: #FF2E93; --violet: #A855FF; --neon: #39FF14;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    line-height: 1.55; -webkit-font-smoothing: antialiased;
+    /* Brillo suave de fondo arriba (decorativo) */
+    background-image: radial-gradient(60rem 30rem at 50% -10rem, rgba(168,85,255,.16), transparent 70%);
+    background-repeat: no-repeat;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---------- Cabecera ---------- */
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; font-size: 20px; letter-spacing: .5px; }
+  .mark { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-weight: 700; color: #fff;
+          background: linear-gradient(135deg, var(--orange), var(--violet)); }
+  header nav a { color: var(--dim); text-decoration: none; margin-left: 20px; font-size: 15px; }
+  header nav a:hover { color: var(--text); }
+
+  /* ---------- Portada ---------- */
+  .hero { padding: 64px 0 40px; max-width: 720px; }
+  .eyebrow { color: var(--neon); text-transform: uppercase; letter-spacing: 2px; font-size: 13px; font-weight: 500; }
+  h1 { font-size: clamp(40px, 6.5vw, 68px); line-height: 1.02; letter-spacing: -2px; margin: 14px 0 18px; }
+  h1 .grad { white-space: nowrap; background: linear-gradient(90deg, var(--orange), var(--pink), var(--violet)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { color: var(--dim); font-size: 19px; margin: 0; }
+
+  /* ---------- Tarjetas de apps ---------- */
+  h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 2px; color: var(--mute); font-weight: 500; margin: 32px 0 16px; }
+  .apps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding-bottom: 48px; }
+  .app {
+    /* Cada tarjeta define sus dos colores con --c1 y --c2 */
+    position: relative; display: flex; flex-direction: column; gap: 14px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 22px;
+    transition: transform .15s ease, border-color .15s ease;
+  }
+  .app:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--c2) 45%, var(--border)); }
+  .app.featured { grid-column: 1 / -1; background: linear-gradient(135deg, color-mix(in srgb, var(--c1) 14%, var(--surface)), color-mix(in srgb, var(--c2) 14%, var(--surface))); border-color: color-mix(in srgb, var(--c2) 35%, var(--border)); }
+  .top { display: flex; align-items: center; gap: 14px; }
+  .icon { width: 56px; height: 56px; flex: none; border-radius: 16px; display: grid; place-items: center;
+          background: linear-gradient(135deg, var(--c1), var(--c2)); box-shadow: 0 8px 24px color-mix(in srgb, var(--c2) 35%, transparent); }
+  .icon svg { width: 28px; height: 28px; }
+  .app h3 { margin: 0; font-size: 24px; letter-spacing: -.5px; }
+  .tagline { color: var(--dim); font-size: 14px; }
+  .app p { margin: 0; color: var(--dim); }
+  .status { align-self: flex-start; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; border-radius: 8px; padding: 3px 8px; }
+  .status.live { color: var(--neon); background: rgba(57,255,20,.1); border: 1px solid rgba(57,255,20,.35); }
+  .status.soon { color: var(--dim); background: var(--surface2); border: 1px solid var(--border); }
+  .actions { margin-top: auto; display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 18px; border-radius: 14px; font-weight: 700; text-decoration: none; }
+  .btn.primary { color: #fff; background: linear-gradient(135deg, var(--c1), var(--c2)); }
+  .btn.ghost { border: 1px solid var(--border); color: var(--text); }
+  .btn.off { border: 1px dashed var(--border); color: var(--mute); cursor: default; }
+
+  /* ---------- Bloque "quién soy" ---------- */
+  .about { display: grid; grid-template-columns: 1.2fr .8fr; gap: 24px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 28px; margin-bottom: 56px; }
+  .about h3 { margin: 0 0 8px; font-size: 22px; }
+  .about p { margin: 0; color: var(--dim); }
+  .about .actions { justify-content: flex-end; --c1: var(--orange); --c2: var(--pink); }
+
+  footer { border-top: 1px solid var(--border); padding: 28px 0 40px; color: var(--mute); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: space-between; }
+  footer a { color: var(--dim); }
+
+  /* ---------- Móvil ---------- */
+  @media (max-width: 860px) {
+    .apps { grid-template-columns: 1fr; }
+    .app.featured { grid-column: auto; }
+    .about { grid-template-columns: 1fr; }
+    .about .actions { justify-content: flex-start; }
+    header nav a.hide-m { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="/"><span class="mark">s</span>sernuu</a>
+    <nav>
+      <a class="hide-m" href="#apps">Apps</a>
+      <a href="https://ko-fi.com/sernuu" rel="noopener">☕ Apoyar</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="eyebrow">Apps de sernuu</div>
+    <h1>Apps que hago <span class="grad">a mano</span>, para usarlas de verdad.</h1>
+    <p class="lead">Soy Sergio y hago apps en mis ratos libres: sencillas, útiles y sin rastrearte. Aquí tienes las que ya funcionan y las que vienen.</p>
+  </div>
+
+  <h2 id="apps">Mis apps</h2>
+  <div class="apps">
+
+    <!-- ===== Rumbo (disponible) ===== -->
+    <article class="app featured" style="--c1:#FF7A18; --c2:#FF2E93">
+      <div class="top">
+        <div class="icon"><svg viewBox="0 0 24 24"><path d="M20 4 3 11l7 3 3 7z" fill="#fff"/></svg></div>
+        <div>
+          <h3>Rumbo</h3>
+          <div class="tagline">Viajes</div>
+        </div>
+      </div>
+      <span class="status live">Disponible</span>
+      <p>Busca una ciudad, elige qué ver y te monta el plan día a día: rutas, dónde y a qué hora comer, qué reservar y qué documentos llevar. Cada país que visitas se ilumina en tu pasaporte.</p>
+      <div class="actions">
+        <a class="btn primary" href="https://rumbo.sernuu.com/app/">Abrir Rumbo</a>
+        <a class="btn ghost" href="https://rumbo.sernuu.com/">Ver más</a>
+      </div>
+    </article>
+
+    <!-- ===== Nevu (en desarrollo) ===== -->
+    <article class="app" style="--c1:#A855FF; --c2:#00F0FF">
+      <div class="top">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></div>
+        <div>
+          <h3>Nevu</h3>
+          <div class="tagline">Películas, series, libros y música</div>
+        </div>
+      </div>
+      <span class="status soon">En desarrollo</span>
+      <p>Puntúa del 1 al 10 todo lo que ves, lees y escuchas, y descubre qué les gusta a tus amigos.</p>
+      <div class="actions"><span class="btn off">Pronto</span></div>
+    </article>
+
+    <!-- ===== Mi Libreta (en desarrollo) ===== -->
+    <article class="app" style="--c1:#39FF14; --c2:#00B3FF">
+      <div class="top">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg></div>
+        <div>
+          <h3>Mi Libreta</h3>
+          <div class="tagline">Finanzas personales</div>
+        </div>
+      </div>
+      <span class="status soon">En desarrollo</span>
+      <p>Apunta tus gastos e ingresos en segundos y mira en qué se te va el dinero cada mes.</p>
+      <div class="actions"><span class="btn off">Pronto</span></div>
+    </article>
+
+  </div>
+
+  <div class="about">
+    <div>
+      <h3>¿Te sirven mis apps?</h3>
+      <p>Rumbo es gratis y sin anuncios. Si quieres apoyarme para que pueda dedicarle más tiempo (y a las que vienen), puedes invitarme a un café. Es voluntario y no desbloquea nada.</p>
+    </div>
+    <div class="actions">
+      <a class="btn primary" href="https://ko-fi.com/sernuu" rel="noopener">☕ Invítame a un café</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 sernuu</span>
+    <span>
+      <a href="aviso-legal.html">Aviso legal</a> ·
+      <a href="mailto:mysticnebulosa06@gmail.com">Contacto</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>
